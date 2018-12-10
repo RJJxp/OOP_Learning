@@ -18,11 +18,13 @@ SOURCES += \
     src/shapelib/dbfopen.cpp \
     src/shapelib/shpopen.cpp \
     src/shapelib/shptree.cpp \
-    src/RjpClass/rjpshape.cpp
+    src/RjpClass/rjpshape.cpp \
+    src/RjpClass/rjpdataset.cpp
 
 HEADERS  += \
     include/mainwindow.h \
     include/shapelib/shapefil.h \
-    include/RjpClass/rjpshape.h
+    include/RjpClass/rjpshape.h \
+    include/RjpClass/rjpdataset.h
 
 FORMS    += mainwindow.ui
