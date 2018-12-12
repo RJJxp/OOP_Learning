@@ -1,11 +1,42 @@
 #include "include/RjpClass/rjpshape.h"
 
 #include "QVector"
+#include "QPaintDevice"
 
 #include "include/shapelib/shapefil.h"
 
 namespace rjpshapefile{
 namespace drawpart{
+
+RjpShape* RjpShape::clone(){
+    RjpDatasetPtr tem_datasetptr(_datasetPtr);
+    int tem_shapetype = tem_datasetptr.getValue()->_shp_header->nShapeType;
+    switch (tem_shapetype){
+    case 1:
+    case 11:
+    case 21:{
+        return new RjpPoint(tem_datasetptr);
+        break;
+    }
+    case 3:
+    case 13:
+    case 23:{
+        return new RjpPolyline(tem_datasetptr);
+        break;
+    }
+    case 5:
+    case 15:
+    case 25:{
+        return new RjpPolygon(tem_datasetptr);
+        break;
+    }
+    default:{
+        return NULL;
+        break;
+    }
+
+    }   // swtich
+}   // function
 
 // the details about how to realize this
 // before this transform
@@ -41,12 +72,157 @@ QVector<double> RjpShape::data2Screen(QVector<double> coor,
 }
 
 
-void RjpPoint::drawShape(QPainter *painter, QVector<double> databox) const{
-
+void RjpPoint::drawShape(QPainter* painter, QVector<double> databox) const{
+    if (_datasetPtr.getValue()->_is_show == false)
+        return;
+    // Build the display minbox and maxbox for the tree and drawing
+    QVector<double> display_minbox,display_maxbox;
+    display_minbox.push_back(databox[0]);
+    display_minbox.push_back(databox[1]);
+    display_minbox.push_back(0);
+    display_minbox.push_back(0);
+    display_maxbox.push_back(databox[2]);
+    display_maxbox.push_back(databox[3]);
+    display_maxbox.push_back(0);
+    display_maxbox.push_back(0);
+    // Use func in shapelib.h to search the obj in the displaybox
+    int* record_hit_list = NULL;
+    int record_hit_count;
+    record_hit_list = SHPTreeFindLikelyShapes(_datasetPtr.getValue()->_shp_tree,
+                                              display_minbox,
+                                              display_maxbox,
+                                              &record_hit_count);
+    QPaintDevice* pic = painter->device();
+    // define the variable outta the 'for' cycle
+    // to make code more effcient
+    SHPObject* shp_content = NULL;
+    QVector<double> old_coor(2,0);
+    double x,y; // TODO: run twice data2Screen, low effciency
+    for (int i = 0; i < record_hit_count; i++){
+        shp_content = SHPReadObject(_datasetPtr.getValue()->_shp_header,
+                                    record_hit_list[i]);
+        old_coor[0] = shp_content->padfX[0];
+        old_coor[1] = shp_content->padfY[0];
+        x = data2Screen(old_coor, pic, databox)[0];
+        y = data2Screen(old_coor, pic, databox)[1];
+        painter->drawLine(QPointF(x-2,y), QPointF(x+2,y));
+        painter->drawLine(QPointF(x,y-2), QPointF(x,y+2));
+    }
+    // TODO: does 2 sentences really work?
+    SHPDestroyObject(shp_content);
+    shp_content = NULL;
 }
 
-RjpShape* RjpPoint::clone(){
+void RjpPolyline::drawShape(QPainter *painter, QVector<double> databox) const{
+    if (_datasetPtr.getValue()->_is_show == false)
+        return;
+    // Build the display minbox and maxbox for the tree and drawing
+    QVector<double> display_minbox,display_maxbox;
+    display_minbox.push_back(databox[0]);
+    display_minbox.push_back(databox[1]);
+    display_minbox.push_back(0);
+    display_minbox.push_back(0);
+    display_maxbox.push_back(databox[2]);
+    display_maxbox.push_back(databox[3]);
+    display_maxbox.push_back(0);
+    display_maxbox.push_back(0);
+    // Use func in shapelib.h to search the obj in the displaybox
+    int* record_hit_list = NULL;
+    int record_hit_count;
+    record_hit_list = SHPTreeFindLikelyShapes(_datasetPtr.getValue()->_shp_tree,
+                                              display_minbox,
+                                              display_maxbox,
+                                              &record_hit_count);
+    QPaintDevice* pic = painter->device();
+    // define the variable outta the 'for' cycle
+    // to make code more effcient
+    SHPObject* shp_content = NULL;
+    QVector<double> old_coor(2,0);
+    double x,y;
+    for (int i = 0; i < record_hit_count; i++){
+        shp_content = SHPReadObject(_datasetPtr.getValue()->_shp_header,
+                                    record_hit_list[i]);
+        // Build the part array
+        QVector<int> new_parts;
+        for (int j = 0; j < shp_content->nParts; j++)
+            new_parts.append(shp_content->panPartStart[j]);
+        new_parts.append(shp_content->nVertices);
+        // Start to draw
+        for (int j = 0; j < new_parts.size() - 1; j++){
+            int point_count = new_parts[j+1] - new_parts[j];
+            QPointF* point_pair = new QPointF[point_count];
+            for (int k = new_parts[j]; k < new_parts[j+1]; k++){
+                old_coor[0] = shp_content->padfX[k];
+                old_coor[1] = shp_content->padfY[k];
+                x = data2Screen(old_coor, pic, databox)[0];
+                y = data2Screen(old_coor, pic, databox)[1];
+                point_pair[k - new_parts[j]].setX(x);
+                point_pair[k - new_parts[j]].setY(y);
+            }   // for loop k
+            painter->drawLines(point_pair, point_count/2 - 1);
+            delete point_pair;
+            point_pair = NULL;
+        }   // for loop j
+        SHPDestroyObject(shp_content);
+        shp_content = NULL;
+    }   // for loop i
+}
 
+// The only difference between drawing polyline and polygon
+// is the draw function, only one sentence is different
+void RjpPolygon::drawShape(QPainter *painter, QVector<double> databox) const{
+    if (_datasetPtr.getValue()->_is_show == false)
+        return;
+    // Build the display minbox and maxbox for the tree and drawing
+    QVector<double> display_minbox,display_maxbox;
+    display_minbox.push_back(databox[0]);
+    display_minbox.push_back(databox[1]);
+    display_minbox.push_back(0);
+    display_minbox.push_back(0);
+    display_maxbox.push_back(databox[2]);
+    display_maxbox.push_back(databox[3]);
+    display_maxbox.push_back(0);
+    display_maxbox.push_back(0);
+    // Use func in shapelib.h to search the obj in the displaybox
+    int* record_hit_list = NULL;
+    int record_hit_count;
+    record_hit_list = SHPTreeFindLikelyShapes(_datasetPtr.getValue()->_shp_tree,
+                                              display_minbox,
+                                              display_maxbox,
+                                              &record_hit_count);
+    QPaintDevice* pic = painter->device();
+    // define the variable outta the 'for' cycle
+    // to make code more effcient
+    SHPObject* shp_content = NULL;
+    QVector<double> old_coor(2,0);
+    double x,y;
+    for (int i = 0; i < record_hit_count; i++){
+        shp_content = SHPReadObject(_datasetPtr.getValue()->_shp_header,
+                                    record_hit_list[i]);
+        // Build the part array
+        QVector<int> new_parts;
+        for (int j = 0; j < shp_content->nParts; j++)
+            new_parts.append(shp_content->panPartStart[j]);
+        new_parts.append(shp_content->nVertices);
+        // Start to draw
+        for (int j = 0; j < new_parts.size() - 1; j++){
+            int point_count = new_parts[j+1] - new_parts[j];
+            QPointF* point_pair = new QPointF[point_count];
+            for (int k = new_parts[j]; k < new_parts[j+1]; k++){
+                old_coor[0] = shp_content->padfX[k];
+                old_coor[1] = shp_content->padfY[k];
+                x = data2Screen(old_coor, pic, databox)[0];
+                y = data2Screen(old_coor, pic, databox)[1];
+                point_pair[k - new_parts[j]].setX(x);
+                point_pair[k - new_parts[j]].setY(y);
+            }   // for loop k
+            painter->drawPolygon(point_pair,point_count);
+            delete point_pair;
+            point_pair = NULL;
+        }   // for loop j
+        SHPDestroyObject(shp_content);
+        shp_content = NULL;
+    }   // for loop i
 }
 
 }   // namespace drawpart

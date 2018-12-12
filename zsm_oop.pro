@@ -19,12 +19,17 @@ SOURCES += \
     src/shapelib/shpopen.cpp \
     src/shapelib/shptree.cpp \
     src/RjpClass/rjpshape.cpp \
-    src/RjpClass/rjpdataset.cpp
+    src/RjpClass/rjpdataset.cpp \
+    src/RjpClass/rjpfactory.cpp \
+    src/RjpClass/rjpshapes.cpp
 
 HEADERS  += \
     include/mainwindow.h \
     include/shapelib/shapefil.h \
     include/RjpClass/rjpshape.h \
-    include/RjpClass/rjpdataset.h
+    include/RjpClass/rjpdataset.h \
+    include/RjpClass/rjpfactory.h \
+    include/RjpClass/rjpshapes.h \
+    include/RjpClass/rjpshapescommand.hpp
 
 FORMS    += mainwindow.ui

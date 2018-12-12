@@ -33,7 +33,19 @@ public:
     virtual void drawShape(QPainter* painter, QVector<double> databox) const;
 };
 
+class RjpPolyline : public RjpShape{
+public:
+    RjpPolyline(RjpDatasetPtr datasetptr):RjpShape(datasetptr){}
+    virtual ~RjpPolyline(){}
+    virtual void drawShape(QPainter* painter, QVector<double> databox) const;
+};
 
+class RjpPolygon : public RjpShape{
+public:
+    RjpPloygon(RjpDatasetPtr datasetptr):RjpShape(datasetptr){}
+    virtual ~ RjpPolygon(){}
+    virtual void drawShape(QPainter* painter, QVector<double> databox) const;
+};
 
 }   // namespace drawpart
 }   // namespace rjpshapefile

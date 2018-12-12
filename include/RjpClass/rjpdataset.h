@@ -30,7 +30,7 @@ public:
 // Smart pointer, Contain RjpDataset
 class RjpDatasetPtr{
 public:
-    RjpDatasetPtr(QString filepath);    // 3 construct
+    RjpDatasetPtr(QString filepath);    // 3 constructor
     RjpDatasetPtr(RjpDataset * value);
     RjpDatasetPtr(const RjpDatasetPtr& rhs);
     RjpDatasetPtr& operator = (const RjpDatasetPtr& rhs);   // overload of string =
