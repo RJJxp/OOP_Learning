@@ -9,9 +9,9 @@ namespace rjpshapefile{
 namespace drawpart{
 
 // initialize the static variable
-RjpShape* RjpFactory::_instance = NULL;
+RjpFactory* RjpFactory::_instance = NULL;
 
-RjpShape* RjpFactory::getInstance(){
+RjpFactory* RjpFactory::getInstance(){
     if (_instance == NULL)
         _instance = new ESRIFactory();
     return _instance;

@@ -13,7 +13,7 @@ class RjpShape
 {
 public:
     virtual ~RjpShape(){}
-    virtual void drawShape(QPainter* painter, QVector<double> databox) const = 0;
+    virtual void drawShape(QPainter* painter, QVector<double> databox) = 0;
     RjpShape* clone();
     RjpDatasetPtr getDatasetPtr() const {return _datasetPtr;}
 protected:
@@ -30,21 +30,21 @@ class RjpPoint : public RjpShape{
 public:
     RjpPoint(RjpDatasetPtr datasetptr):RjpShape(datasetptr){}
     virtual ~RjpPoint(){}
-    virtual void drawShape(QPainter* painter, QVector<double> databox) const;
+    virtual void drawShape(QPainter* painter, QVector<double> databox);
 };
 
 class RjpPolyline : public RjpShape{
 public:
     RjpPolyline(RjpDatasetPtr datasetptr):RjpShape(datasetptr){}
     virtual ~RjpPolyline(){}
-    virtual void drawShape(QPainter* painter, QVector<double> databox) const;
+    virtual void drawShape(QPainter* painter, QVector<double> databox);
 };
 
 class RjpPolygon : public RjpShape{
 public:
-    RjpPloygon(RjpDatasetPtr datasetptr):RjpShape(datasetptr){}
+    RjpPolygon(RjpDatasetPtr datasetptr):RjpShape(datasetptr){}
     virtual ~ RjpPolygon(){}
-    virtual void drawShape(QPainter* painter, QVector<double> databox) const;
+    virtual void drawShape(QPainter* painter, QVector<double> databox);
 };
 
 }   // namespace drawpart

@@ -72,19 +72,20 @@ QVector<double> RjpShape::data2Screen(QVector<double> coor,
 }
 
 
-void RjpPoint::drawShape(QPainter* painter, QVector<double> databox) const{
+void RjpPoint::drawShape(QPainter* painter, QVector<double> databox) {
     if (_datasetPtr.getValue()->_is_show == false)
         return;
     // Build the display minbox and maxbox for the tree and drawing
-    QVector<double> display_minbox,display_maxbox;
-    display_minbox.push_back(databox[0]);
-    display_minbox.push_back(databox[1]);
-    display_minbox.push_back(0);
-    display_minbox.push_back(0);
-    display_maxbox.push_back(databox[2]);
-    display_maxbox.push_back(databox[3]);
-    display_maxbox.push_back(0);
-    display_maxbox.push_back(0);
+    double display_minbox[4];
+    double display_maxbox[4];
+    display_minbox[0] = databox[0];
+    display_minbox[1] = databox[1];
+    display_minbox[2] = 0;
+    display_minbox[3] = 0;
+    display_maxbox[0] = databox[2];
+    display_maxbox[1] = databox[3];
+    display_maxbox[2] = 0;
+    display_maxbox[3] = 0;
     // Use func in shapelib.h to search the obj in the displaybox
     int* record_hit_list = NULL;
     int record_hit_count;
@@ -113,19 +114,20 @@ void RjpPoint::drawShape(QPainter* painter, QVector<double> databox) const{
     shp_content = NULL;
 }
 
-void RjpPolyline::drawShape(QPainter *painter, QVector<double> databox) const{
+void RjpPolyline::drawShape(QPainter *painter, QVector<double> databox) {
     if (_datasetPtr.getValue()->_is_show == false)
         return;
     // Build the display minbox and maxbox for the tree and drawing
-    QVector<double> display_minbox,display_maxbox;
-    display_minbox.push_back(databox[0]);
-    display_minbox.push_back(databox[1]);
-    display_minbox.push_back(0);
-    display_minbox.push_back(0);
-    display_maxbox.push_back(databox[2]);
-    display_maxbox.push_back(databox[3]);
-    display_maxbox.push_back(0);
-    display_maxbox.push_back(0);
+    double display_minbox[4];
+    double display_maxbox[4];
+    display_minbox[0] = databox[0];
+    display_minbox[1] = databox[1];
+    display_minbox[2] = 0;
+    display_minbox[3] = 0;
+    display_maxbox[0] = databox[2];
+    display_maxbox[1] = databox[3];
+    display_maxbox[2] = 0;
+    display_maxbox[3] = 0;
     // Use func in shapelib.h to search the obj in the displaybox
     int* record_hit_list = NULL;
     int record_hit_count;
@@ -170,19 +172,20 @@ void RjpPolyline::drawShape(QPainter *painter, QVector<double> databox) const{
 
 // The only difference between drawing polyline and polygon
 // is the draw function, only one sentence is different
-void RjpPolygon::drawShape(QPainter *painter, QVector<double> databox) const{
+void RjpPolygon::drawShape(QPainter *painter, QVector<double> databox) {
     if (_datasetPtr.getValue()->_is_show == false)
         return;
     // Build the display minbox and maxbox for the tree and drawing
-    QVector<double> display_minbox,display_maxbox;
-    display_minbox.push_back(databox[0]);
-    display_minbox.push_back(databox[1]);
-    display_minbox.push_back(0);
-    display_minbox.push_back(0);
-    display_maxbox.push_back(databox[2]);
-    display_maxbox.push_back(databox[3]);
-    display_maxbox.push_back(0);
-    display_maxbox.push_back(0);
+    double display_minbox[4];
+    double display_maxbox[4];
+    display_minbox[0] = databox[0];
+    display_minbox[1] = databox[1];
+    display_minbox[2] = 0;
+    display_minbox[3] = 0;
+    display_maxbox[0] = databox[2];
+    display_maxbox[1] = databox[3];
+    display_maxbox[2] = 0;
+    display_maxbox[3] = 0;
     // Use func in shapelib.h to search the obj in the displaybox
     int* record_hit_list = NULL;
     int record_hit_count;

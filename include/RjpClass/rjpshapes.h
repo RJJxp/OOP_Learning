@@ -25,13 +25,16 @@ public:
     void addShapes(QStringList filepathlist);
     void drawAllShapes(QPainter* painter) const;
     void notify();
+    // 'get' series
     void getDatabox(QVector<double>& databox) const;
     int getLayersSize() const;
+    QStringList getPathList() const;
+    ob::ShapesObCommand* getOb() const;
 
 private:
     ob::ShapesObCommand* _ob;
     QVector<RjpShape* > _mylayers;
-    QVector<double> _databox;
+    QVector<double> _shps_databox;
     QStringList _pathlist;
 };
 

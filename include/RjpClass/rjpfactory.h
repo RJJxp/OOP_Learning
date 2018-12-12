@@ -20,10 +20,10 @@ protected:
 
 };
 
-class ESRIFactory{
+class ESRIFactory : public RjpFactory{
 public:
     ESRIFactory(){}
-    virtual ~RjpFactory(){}
+    virtual ~ESRIFactory(){}
     virtual RjpShape* createShape(QString filepath);
 };
 
