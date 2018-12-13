@@ -64,11 +64,15 @@ QVector<double> RjpShape::data2Screen(QVector<double> coor,
     y = pic_height - y;
     // translate according to x_scale and y_scale
     if (x_scale > y_scale){
-        y = y - (pic_height / 2 - 1.1 * (displaybox[2] - displaybox[0]) / (2 * final_scale));
+        y = y - (pic_height / 2 - 1.1 * (displaybox[3] - displaybox[1]) / (2 * final_scale));
     }
     else{
-        x = x + (pic_width / 2 - 1.1 * (displaybox[3] - displaybox[1]) / (2 * final_scale));
+        x = x + (pic_width / 2 - 1.1 * (displaybox[2] - displaybox[0]) / (2 * final_scale));
     }
+    QVector<double> re;
+    re.append(x);
+    re.append(y);
+    return re;
 }
 
 

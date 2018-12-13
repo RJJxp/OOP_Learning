@@ -21,7 +21,8 @@ SOURCES += \
     src/RjpClass/rjpshape.cpp \
     src/RjpClass/rjpdataset.cpp \
     src/RjpClass/rjpfactory.cpp \
-    src/RjpClass/rjpshapes.cpp
+    src/RjpClass/rjpshapes.cpp \
+    src/RjpClass/rjpshapeview.cpp
 
 HEADERS  += \
     include/mainwindow.h \
@@ -30,6 +31,7 @@ HEADERS  += \
     include/RjpClass/rjpdataset.h \
     include/RjpClass/rjpfactory.h \
     include/RjpClass/rjpshapes.h \
-    include/RjpClass/rjpshapescommand.hpp
+    include/RjpClass/rjpshapescommand.hpp \
+    include/RjpClass/rjpshapeview.h
 
 FORMS    += mainwindow.ui

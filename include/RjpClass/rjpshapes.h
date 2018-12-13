@@ -38,6 +38,15 @@ private:
     QStringList _pathlist;
 };
 
+// Design pattern: Singleton
+class SingletonShapes{
+public:
+    static RjpShapes* getGlobalData();
+    static void releaseGlobalData();
+private:
+    static RjpShapes* _global_data;
+};
+
 }   // namespace drawpart
 }   // namespace rjpshapefile
 

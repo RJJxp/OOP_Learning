@@ -20,6 +20,10 @@ protected:
 
 };
 
+// Usage
+// ESRIFactory::getInstance->createShape(filepath)
+// the variable 'static RjpFactory* _instance'
+// becomes ESRIFactory
 class ESRIFactory : public RjpFactory{
 public:
     ESRIFactory(){}

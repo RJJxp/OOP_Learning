@@ -43,6 +43,10 @@ RjpShape* StaticFactory::createShape(QString filepath){
         return new RjpPolygon(datasetptr);
         break;
     }   // case 5,15,25
+    default:{
+        return NULL;
+        break;
+    }
     }   // switch
 }
 

@@ -47,6 +47,10 @@ RjpShapes::RjpShapes(RjpShapes* shapes){
     this->_ob = shapes->getOb();
 }
 
+void RjpShapes::setOb(obpart::ShapesObCommand *ob){
+    _ob = ob;
+}
+
 void RjpShapes::addShapes(QStringList filepathlist){
     // _pathlist and _mylayers(shapes)
     int old_path_length = _pathlist.size();
@@ -63,12 +67,30 @@ void RjpShapes::addShapes(QStringList filepathlist){
     _shps_databox.clear();
     for (int i = 0; i < new_path_length; i++){
         if (i == 0){
-            this->_shps_databox.push_back(_mylayers[i]->getDatasetPtr().getValue()->_databox[0]);
-        }
+            this->_shps_databox.push_back(
+                        _mylayers[i]->getDatasetPtr().getValue()->_databox[0]);
+            this->_shps_databox.push_back(
+                        _mylayers[i]->getDatasetPtr().getValue()->_databox[1]);
+            this->_shps_databox.push_back(
+                        _mylayers[i]->getDatasetPtr().getValue()->_databox[2]);
+            this->_shps_databox.push_back(
+                        _mylayers[i]->getDatasetPtr().getValue()->_databox[3]);
+        }   // if
         else{
-
-        }
-    }
+            if (_mylayers[i]->getDatasetPtr().getValue()->_databox[0] <
+                    this->_shps_databox[0])
+                this->_shps_databox[0] = _mylayers[i]->getDatasetPtr().getValue()->_databox[0];
+            if (_mylayers[i]->getDatasetPtr().getValue()->_databox[1] <
+                    this->_shps_databox[1])
+                this->_shps_databox[1] = _mylayers[i]->getDatasetPtr().getValue()->_databox[1];
+            if (_mylayers[i]->getDatasetPtr().getValue()->_databox[2] >
+                    this->_shps_databox[2])
+                this->_shps_databox[2] = _mylayers[i]->getDatasetPtr().getValue()->_databox[2];
+            if (_mylayers[i]->getDatasetPtr().getValue()->_databox[3] >
+                    this->_shps_databox[3])
+                this->_shps_databox[3] = _mylayers[i]->getDatasetPtr().getValue()->_databox[3];
+        }   // else
+    }   // for
 }
 
 void RjpShapes::drawAllShapes(QPainter *painter) const{
@@ -105,6 +127,20 @@ void RjpShapes::getDatabox(QVector<double> &databox) const{
 
 void RjpShapes::notify(){
     _ob->execute();
+}
+
+RjpShapes* SingletonShapes::_global_data = NULL;
+
+RjpShapes* SingletonShapes::getGlobalData(){
+    if (!_global_data){
+        _global_data = new RjpShapes();
+    }
+    return _global_data;
+}
+
+void SingletonShapes::releaseGlobalData(){
+    if(_global_data)
+        delete _global_data;
 }
 
 }   // namespace drawpart
